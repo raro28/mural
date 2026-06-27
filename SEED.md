@@ -51,6 +51,8 @@ writes must be **tolerant read-modify-write** — never clobber keys Mural doesn
 - **Shape:** standalone Adwaita app only. No second extension.
 - **v1 scope:** strict parity with today's prefs — to-scale arrangement, per-monitor wallpaper
   pick, fit-mode, WYSIWYG thumbnail. New features (folder browse, presets, shuffle) deferred.
+- **Config semantics:** immediate write per change (tolerant RMW) + live-watch to reload on
+  external edits. No Save button in v1.
 - **Name:** Mural. Repo + binary `mural`, display name "Mural".
 - **App-id / desktop / metainfo:** `dev.muy.Mural` (namespace `dev.muy.*`, domain muy.dev).
 - **Host / target:** Fedora 44, GNOME 50.2, GTK 4.22.
@@ -73,11 +75,14 @@ types.
 
 - **App shell:** `Adwaita.Application` single window showing the arrangement directly, vs a
   preferences-style page.
-- **Config semantics:** immediate write on each change (today's prefs behavior), vs explicit
-  edit-then-Save. Live-watch the file to reflect external edits, vs load-once.
 - **Code reuse:** copy `prefs/*` + `lib/*` into Mural, vs share via a small package.
 - **Packaging a GJS app as RPM:** launcher invoking `gjs`, bundled JS under `/usr/share`,
   `.desktop`, icon, AppStream metainfo.
+
+## Future (desirable, deferred)
+
+- **Edit-then-Save** model (dirty-state + explicit commit) as an alternative to immediate write.
+- Wallpaper-folder browse, saved presets, shuffle/random.
 
 ## Status
 
