@@ -53,6 +53,10 @@ writes must be **tolerant read-modify-write** — never clobber keys Mural doesn
   pick, fit-mode, WYSIWYG thumbnail. New features (folder browse, presets, shuffle) deferred.
 - **Config semantics:** immediate write per change (tolerant RMW) + live-watch to reload on
   external edits. No Save button in v1.
+- **Code reuse:** copy `prefs/*` + `lib/*` into Mural; no shared package. The only permanently
+  shared modules are `lib/config` + `lib/mode` (the schema + fit-mode contract); `lib/layout`
+  and `prefs/*` are Mural-exclusive once the extension is trimmed. **Trigger to revisit:** if
+  the shared `config`/`mode` files grow in complexity, extract them into a shared package.
 - **Name:** Mural. Repo + binary `mural`, display name "Mural".
 - **App-id / desktop / metainfo:** `dev.muy.Mural` (namespace `dev.muy.*`, domain muy.dev).
 - **Host / target:** Fedora 44, GNOME 50.2, GTK 4.22.
@@ -75,7 +79,6 @@ types.
 
 - **App shell:** `Adwaita.Application` single window showing the arrangement directly, vs a
   preferences-style page.
-- **Code reuse:** copy `prefs/*` + `lib/*` into Mural, vs share via a small package.
 - **Packaging a GJS app as RPM:** launcher invoking `gjs`, bundled JS under `/usr/share`,
   `.desktop`, icon, AppStream metainfo.
 
