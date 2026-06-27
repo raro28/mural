@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dev.muy.Mural</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Mural</name>
+  <summary>Set a wallpaper per monitor</summary>
+  <description>
+    <p>
+      Mural assigns a wallpaper and fit mode to each connected monitor. It shows a
+      to-scale arrangement of your displays; pick an image per monitor and choose how it
+      fits (zoom, fill, fit, or center). Changes are written immediately.
+    </p>
+  </description>
+  <launchable type="desktop-id">dev.muy.Mural.desktop</launchable>
+  <developer id="dev.muy">
+    <name>Mural</name>
+  </developer>
+  <url type="homepage">https://github.com/raro28/mural</url>
+  <url type="bugtracker">https://github.com/raro28/mural/issues</url>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="1.0.0" date="2026-06-27">
+      <description>
+        <p>Initial release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Mural
+Comment=Set a wallpaper per monitor
+Exec=mural
+Icon=dev.muy.Mural
+Terminal=false
+Categories=Utility;GTK;
+StartupNotify=true
+Keywords=wallpaper;monitor;display;background;
