@@ -43,10 +43,12 @@ Copied from the extension (see SEED → Code reuse; copy, no shared package):
 | `prefs/configStore.ts` | `ui/configStore.ts` | none — tolerant RMW + directory watch |
 | `prefs/thumbnailCache.ts` | `ui/thumbnailCache.ts` | none — Glycin decode + Gdk fallback |
 | `types/glycin.d.ts` | `types/glycin.d.ts` | none |
-| `prefs.ts` | `mural.ts` (entry) | rewrite: drop `ExtensionPreferences`/`fillPreferencesWindow`; add `Adw.Application` + `ApplicationWindow` bootstrap. Store/model/cache wiring, `FileDialog` pick, and the four watchers port verbatim. |
+| `prefs.ts` | `mural.ts` (entry) | rewrite: drop `ExtensionPreferences`/`fillPreferencesWindow`; add `Adw.Application` + `ApplicationWindow` bootstrap. The store/model/cache wiring, the `FileDialog` pick, and the four watchers move over with their logic intact, re-homed from the prefs class into the application/window; the `window` argument type changes `Adw.PreferencesWindow` → `Adw.ApplicationWindow` (a `Gtk.Window`, accepted by `FileDialog.open` and the signal connects). |
 
 The extension's `prefs/*` widgets live under `src/ui/` in Mural (renamed; no longer
-preferences). `src/lib/*` and `src/types/*` keep their names.
+preferences). `src/lib/*` and `src/types/*` keep their names. `GObject` `GTypeName`s (`Pmw*`)
+become `Mural*` on copy — cosmetic; Mural is a separate process, so there is no registration
+collision with the extension.
 
 New, Mural-only:
 - `mural.ts` — `Adw.Application` entry (the rewritten shell).
@@ -63,8 +65,12 @@ New, Mural-only:
 - **Geometry:** `MonitorModel` over `Gdk.Display.get_default().get_monitors()`; connector names
   (`get_connector()`) are the mutter names used as config keys. `model.onChanged` rebuilds tiles
   on monitor hotplug/geometry change.
-- **Thumbnails:** `ThumbnailCache` (Glycin decode, Gdk fallback, mtime-keyed); renders the
-  selected fit-mode WYSIWYG.
+- **Thumbnails:** `ThumbnailCache` only decodes an image to a `Gdk.Texture` (Glycin via
+  `gi://Gly` + `gi://GlyGtk4`, Gdk fallback, keyed by `path:mtime`, null on failure). The
+  **WYSIWYG fit-mode rendering lives in `MonitorTile`** (`ThumbnailArea.vfunc_snapshot` +
+  `destRect` via `Gtk.Snapshot`): zoom = cover/crop, fill = stretch, fit = letterbox, center =
+  native at the tile's `renderScale` (monitor-px → tile-px, fed from the arrangement via
+  `setRenderScale`).
 
 ## 5. App lifecycle
 
@@ -102,7 +108,10 @@ New, Mural-only:
   - `/usr/share/applications/dev.muy.Mural.desktop`,
   - `/usr/share/icons/hicolor/scalable/apps/dev.muy.Mural.svg`,
   - `/usr/share/metainfo/dev.muy.Mural.metainfo.xml`.
-  - `Requires`: `gjs`, `gtk4`, `libadwaita`, glycin loaders, GI typelibs.
+  - `Requires` (confirm exact Fedora 44 package names when authoring the spec): `gjs`, `gtk4`,
+    `libadwaita`, and the Glycin runtime providing the `Gly` + `GlyGtk4` typelibs plus image
+    loaders. `gjs`/`gtk4`/`libadwaita` are confirmed Fedora packages; the Glycin package names
+    are **unverified here** and must be resolved on the host.
   - `%check`: `desktop-file-validate` + `appstreamcli validate`. `rpmlint` 0 errors / 0 warnings.
 
 ## 9. Out of scope / future
@@ -111,3 +120,23 @@ New, Mural-only:
 - Wallpaper-folder browse, saved presets, shuffle/random.
 - Removing the extension's bundled prefs once Mural replaces it.
 - Flatpak distribution.
+
+## 10. Verification notes (self-review 2026-06-27)
+
+Every code reference above was checked against the extension source on this host:
+
+- `lib/config.ts` — `parseConfig` (tolerant → `{}` on invalid), `entryForConnector`,
+  `normalizeDefault`, `setMonitorEntry` (spread-preserves other keys = tolerant RMW),
+  `Config`/`Entry` types. ✓
+- `prefs/configStore.ts` — `read()` returns `{}` on missing/invalid; `setMonitor` = read →
+  `setMonitorEntry` → `replace_contents`; `watch` monitors the config directory. ✓
+- `prefs/thumbnailCache.ts` — decode-only, Glycin (`Gly`/`GlyGtk4`) → Gdk fallback, keyed by
+  `path:mtime`. ✓
+- `prefs/monitorTile.ts` — owns the fit-mode WYSIWYG snapshot (§4 corrected accordingly). ✓
+- `prefs.ts` — prefs-context couplings limited to `ExtensionPreferences`,
+  `fillPreferencesWindow`, `Adw.PreferencesWindow`; four watchers + `close-request`. ✓
+- `lib/layout.ts` imported only by `prefs/arrangement` + `prefs/monitorModel`, never by the
+  runtime — Mural-exclusive after the extension is trimmed. ✓
+
+Flagged as unverified (stated as such, not asserted): exact Fedora 44 Glycin package names
+(§8); Mural's CI/release job and the `.spec` do not exist yet (forward-looking design).
