@@ -1,0 +1,30 @@
+{
+  "name": "mural",
+  "version": "1.0.0",
+  "description": "Per-monitor wallpaper editor (GTK4/libadwaita)",
+  "type": "module",
+  "private": true,
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "build": "esbuild src/mural.ts --bundle --format=esm --outfile=dist/mural.js '--external:gi://*'",
+    "check": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "rm -rf .test-build && esbuild src/lib/*.test.ts --bundle --format=esm --platform=node --outdir=.test-build && node --test '.test-build/*.js'"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@girs/adw-1": "^1.10.0-4.0.4",
+    "@girs/gdk-4.0": "^4.0.0-4.0.4",
+    "@girs/gio-2.0": "^2.88.0-4.0.4",
+    "@girs/gjs": "^4.0.4",
+    "@girs/glib-2.0": "^2.88.0-4.0.4",
+    "@girs/gobject-2.0": "^2.88.0-4.0.4",
+    "@girs/graphene-1.0": "^1.0.0-4.0.4",
+    "@girs/gsk-4.0": "^4.0.0-4.0.4",
+    "@girs/gtk-4.0": "^4.23.0-4.0.4",
+    "esbuild": "^0.28.1",
+    "eslint": "^9.39.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.0"
+  }
+}
