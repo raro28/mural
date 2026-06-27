@@ -62,6 +62,17 @@ writes must be **tolerant read-modify-write** — never clobber keys Mural doesn
   `PreferencesPage`/`Group`/`Row` wrapper (a prefs-API artifact). Only the `ExtensionPreferences`
   base, the `fillPreferencesWindow` entry, and the `PreferencesWindow` type need replacing; the
   rest of `prefs.ts` (store/model/cache wiring, `FileDialog` pick, watchers) ports as-is.
+- **Packaging:** ship a **prebuilt** esbuild bundle. The mural repo's CI produces a release
+  tarball (`mural.js` + `dev.muy.Mural.desktop` + icon + metainfo + `mural` launcher), mirroring
+  the extension's release job. App assets (desktop, icon, metainfo, launcher) live in the mural
+  repo and ship in the tarball.
+  - Install layout: `/usr/bin/mural` → `exec gjs -m /usr/share/mural/mural.js`; desktop, icon
+    (`hicolor/scalable/apps/dev.muy.Mural.svg`), metainfo under standard dirs.
+  - `Requires`: `gjs`, `gtk4`, `libadwaita`, glycin loaders, GI typelibs.
+- **RPM `.spec` location:** the spec lives in the **rpm-specs repo**
+  (`~/Projects/rpm-specs/mural/mural.spec`), built in COPR raro28/wdm on Fedora 44. It consumes
+  the release tarball as `Source0`, installs the files, and `%check`s with `desktop-file-validate`
+  + `appstreamcli validate`. The spec stays thin; `rpmlint` 0/0 gate.
 - **Name:** Mural. Repo + binary `mural`, display name "Mural".
 - **App-id / desktop / metainfo:** `dev.muy.Mural` (namespace `dev.muy.*`, domain muy.dev).
 - **Host / target:** Fedora 44, GNOME 50.2, GTK 4.22.
@@ -79,11 +90,6 @@ The extension's GUI is the seed. Directly portable:
 
 Toolchain mirrors the extension: TypeScript + esbuild (ESM, externalize `gi://*`), `@girs`
 types.
-
-## Open design questions (to brainstorm)
-
-- **Packaging a GJS app as RPM:** launcher invoking `gjs`, bundled JS under `/usr/share`,
-  `.desktop`, icon, AppStream metainfo.
 
 ## Future (desirable, deferred)
 
