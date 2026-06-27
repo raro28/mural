@@ -57,6 +57,11 @@ writes must be **tolerant read-modify-write** — never clobber keys Mural doesn
   shared modules are `lib/config` + `lib/mode` (the schema + fit-mode contract); `lib/layout`
   and `prefs/*` are Mural-exclusive once the extension is trimmed. **Trigger to revisit:** if
   the shared `config`/`mode` files grow in complexity, extract them into a shared package.
+- **App shell:** `Adw.Application` + `Adw.ApplicationWindow` with a `HeaderBar`; `ArrangementView`
+  as direct content; "Open Display Settings" in the header; non-resizable. Drop the
+  `PreferencesPage`/`Group`/`Row` wrapper (a prefs-API artifact). Only the `ExtensionPreferences`
+  base, the `fillPreferencesWindow` entry, and the `PreferencesWindow` type need replacing; the
+  rest of `prefs.ts` (store/model/cache wiring, `FileDialog` pick, watchers) ports as-is.
 - **Name:** Mural. Repo + binary `mural`, display name "Mural".
 - **App-id / desktop / metainfo:** `dev.muy.Mural` (namespace `dev.muy.*`, domain muy.dev).
 - **Host / target:** Fedora 44, GNOME 50.2, GTK 4.22.
@@ -77,8 +82,6 @@ types.
 
 ## Open design questions (to brainstorm)
 
-- **App shell:** `Adwaita.Application` single window showing the arrangement directly, vs a
-  preferences-style page.
 - **Packaging a GJS app as RPM:** launcher invoking `gjs`, bundled JS under `/usr/share`,
   `.desktop`, icon, AppStream metainfo.
 
