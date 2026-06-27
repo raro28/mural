@@ -24,6 +24,8 @@ These rules bind your replies and any document you write or edit, equally.
 - No assumptions, no hypotheticals. If one is unavoidable, mark it visibly as such.
 - Verify against the code and a real run on this host — not prior knowledge or stale docs.
 - No silent scope: report what you ran, what passed, and what you skipped.
+- Not chatty. State facts directly — no narrative framing, preamble, or filler.
+- Avoid antithesis prose ("not X, but Y"; "it isn't this, it's that"). State the fact once.
 
 ## Verify, don't assert — applied to this repo
 

@@ -49,6 +49,8 @@ writes must be **tolerant read-modify-write** — never clobber keys Mural doesn
 ## Decisions locked
 
 - **Shape:** standalone Adwaita app only. No second extension.
+- **v1 scope:** strict parity with today's prefs — to-scale arrangement, per-monitor wallpaper
+  pick, fit-mode, WYSIWYG thumbnail. New features (folder browse, presets, shuffle) deferred.
 - **Name:** Mural. Repo + binary `mural`, display name "Mural".
 - **App-id / desktop / metainfo:** `dev.muy.Mural` (namespace `dev.muy.*`, domain muy.dev).
 - **Host / target:** Fedora 44, GNOME 50.2, GTK 4.22.
@@ -69,9 +71,6 @@ types.
 
 ## Open design questions (to brainstorm)
 
-- **v1 scope:** strict parity with today's prefs (arrangement + per-monitor pick + fit-mode),
-  or does standalone unlock new features (folder browse, presets, shuffle)? (YAGNI → parity
-  first.)
 - **App shell:** `Adwaita.Application` single window showing the arrangement directly, vs a
   preferences-style page.
 - **Config semantics:** immediate write on each change (today's prefs behavior), vs explicit
