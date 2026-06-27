@@ -1,6 +1,6 @@
 {
   "name": "mural",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Per-monitor wallpaper editor (GTK4/libadwaita)",
   "type": "module",
   "private": true,
