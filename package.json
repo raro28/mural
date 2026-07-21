@@ -23,7 +23,7 @@
     "@girs/gsk-4.0": "^4.0.0-4.0.4",
     "@girs/gtk-4.0": "^4.23.0-4.0.4",
     "esbuild": "^0.28.1",
-    "eslint": "^9.39.4",
+    "eslint": "^10.7.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.0"
   }
